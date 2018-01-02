@@ -4,12 +4,12 @@
 
 (def config
   {:global   {"check_for_updates_on_startup"  true
-              "show_in_menu_bar"              true,
-              "show_profile_name_in_menu_bar" false}
+              "show_in_menu_bar"              true
+              "show_profile_name_in_menu_bar" true}
    :profiles []})
 
 (def capsvim-profile
-  {:name                  "capsvim2"
+  {:name                  "N"
    :virtual_hid_keyboard  {:caps_lock_delay_milliseconds 0
                            :keyboard_type                "ansi"}
    :simple_modifications  [{:from {:key_code "caps_lock"}
@@ -31,7 +31,16 @@
                                                         {:type "basic"
                                                          :from {:key_code  "l"
                                                                 :modifiers {:mandatory "left_control"}}
-                                                         :to   [{:key_code "right_arrow"}]}]}]}})
+                                                         :to   [{:key_code "right_arrow"}]}
+
+                                                        {:type            :basic
+                                                         :from            {:key_code "1"}
+                                                         :to_if_alone     [{:key_code "1"}]
+                                                         :to_if_held_down [{:shell_command "'/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli' --select-profile 'C'"}]
+                                                         :parameters      {"basic.to_if_alone_timeout_milliseconds"       250,
+                                                                           "basic.to_if_held_down_threshold_milliseconds" 250}
+                                                         }
+                                                        ]}]}})
 
 (defn layer-factory
   "Creates a function which is capable of defining manipulators that inherit the conditions from
@@ -64,7 +73,7 @@
 (def standard (layer-factory [[:if "snap" 0] [:if "pop" 0]]))
 
 (def crackle-profile
-  {:name                  "crackle"
+  {:name                  "C"
    :selected              true
    :virtual_hid_keyboard  {:caps_lock_delay_milliseconds 0
                            :keyboard_type                "ansi"}
@@ -139,8 +148,8 @@
                                                         (snap "close_bracket" "grave_accent_and_tilde")
 
                                                         ; middle row
-                                                        (snap "semicolon" "slash" "shift")
-                                                        (snap "quote" "semicolon")
+                                                        (snap "quote" "right_arrow" ["command"])
+                                                        (snap "semicolon" "left_arrow" ["command"])
                                                         (snap "l" "right_arrow")
                                                         (snap "k" "up_arrow")
                                                         (snap "j" "down_arrow")
@@ -176,6 +185,8 @@
                                                         (snap-d "m" "m" ["command" "option" "control" "shift"]) ; splice sexp
 
                                                         ; selection, copy-paste, undo, redo
+                                                        (snap-f "quote" "right_arrow" ["command" "shift"])
+                                                        (snap-f "semicolon" "left_arrow" ["command" "shift"])
                                                         (snap-f "l" "right_arrow" "shift")
                                                         (snap-f "k" "up_arrow" "shift")
                                                         (snap-f "j" "down_arrow" "shift")
@@ -203,6 +214,16 @@
                                                         (pop "c" "close_bracket") ; ]
                                                         (pop "v" "0" ["shift"]) ; )
                                                         (pop "x" "close_bracket" ["shift"]) ; }
+                                                        (pop "a" "slash" ["shift"])
+                                                        (pop "s" "semicolon")
+
+                                                        {:type            :basic
+                                                         :from            {:key_code "1"}
+                                                         :to_if_alone     [{:key_code "1"}]
+                                                         :to_if_held_down [{:shell_command "'/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli' --select-profile 'N'"}]
+                                                         :parameters      {"basic.to_if_alone_timeout_milliseconds"       250,
+                                                                           "basic.to_if_held_down_threshold_milliseconds" 250}}
+
                                                         ]}]}})
 
 
