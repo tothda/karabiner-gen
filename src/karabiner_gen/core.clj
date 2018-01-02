@@ -211,8 +211,5 @@
       (generate-string
         (-> config
             (update :profiles conj capsvim-profile)
-            (update :profiles conj super-profile)
-            (update :profiles conj crackle-profile)
-            (update :profiles conj chord-profile)
-            )
+            (update :profiles conj crackle-profile))
         {:pretty true}))
