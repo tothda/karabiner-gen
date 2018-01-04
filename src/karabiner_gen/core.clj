@@ -53,18 +53,22 @@
     (fn layer-factory'
       ([from] (layer-factory' from from nil))
       ([from to] (layer-factory' from to nil))
-      ([from to modifiers]
-       (let [modifiers (cond
-                         (nil? modifiers) []
-                         (coll? modifiers) modifiers
-                         :else [modifiers])]
+      ([from to to-modifiers] (layer-factory' from nil to to-modifiers))
+      ([from from-modifiers to to-modifiers]
+       (let [from-modifiers (cond
+                              (nil? from-modifiers) []
+                              (coll? from-modifiers) from-modifiers
+                              :else [from-modifiers])
+             to-modifiers   (cond
+                              (nil? to-modifiers) []
+                              (coll? to-modifiers) to-modifiers
+                              :else [to-modifiers])]
          {:type       "basic"
           :conditions conditions
-          :from       {:key_code from
-                       ;:modifiers {:optional ["any"]}
-                       }
+          :from       {:key_code  from
+                       :modifiers {:optional from-modifiers}}
           :to         [{:key_code  to
-                        :modifiers modifiers}]})))))
+                        :modifiers to-modifiers}]})))))
 
 (def snap (layer-factory [[:if "snap" 1] [:if "snap-d" 0] [:if "snap-f" 0] [:if "pop" 0]]))
 (def snap-d (layer-factory [[:if "snap-d" 1] [:if "pop" 0]]))
@@ -130,6 +134,10 @@
                                                         (standard "tab" "left_control")
                                                         (standard "semicolon" "return_or_enter")
                                                         (standard "comma" "delete_or_backspace")
+
+                                                        ; this control can be used in compound shortcuts like
+                                                        ; Command-Control-Shift-4 (make screenshot into clipboard)
+                                                        (standard "period" ["any"] "left_control" [])
 
                                                         ; snap layer
                                                         ; top row
