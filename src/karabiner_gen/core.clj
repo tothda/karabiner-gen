@@ -139,6 +139,9 @@
                                                         ; Command-Control-Shift-4 (make screenshot into clipboard)
                                                         (standard "period" ["any"] "left_control" [])
 
+                                                        ; to change between windows of a program comfortable on a hungarian keyboard
+                                                        (standard "non_us_backslash" "command" "grave_accent_and_tilde" "command")
+
                                                         ; snap layer
                                                         ; top row
                                                         (snap "tab" "hyphen" "shift")
@@ -191,6 +194,10 @@
                                                         (snap-d "o" "o" ["command" "option" "control" "shift"]) ; run test under caret
                                                         (snap-d "i" "i" ["command" "option" "control" "shift"]) ; raise sexp
                                                         (snap-d "m" "m" ["command" "option" "control" "shift"]) ; splice sexp
+                                                        (snap-d "n" "n" ["command" "option" "control" "shift"]) ; recent files
+                                                        (snap-d "b" "b" ["command" "option" "control" "shift"]) ; restart system
+                                                        (snap-d "u" "u" ["command" "option" "control" "shift"]) ; rerun last test action
+
 
                                                         ; selection, copy-paste, undo, redo
                                                         (snap-f "quote" "right_arrow" ["command" "shift"])
@@ -225,14 +232,13 @@
                                                         (pop "a" "slash" ["shift"])
                                                         (pop "s" "semicolon")
 
+                                                        ;
                                                         {:type            :basic
                                                          :from            {:key_code "1"}
                                                          :to_if_alone     [{:key_code "1"}]
                                                          :to_if_held_down [{:shell_command "'/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli' --select-profile 'N'"}]
                                                          :parameters      {"basic.to_if_alone_timeout_milliseconds"       250,
-                                                                           "basic.to_if_held_down_threshold_milliseconds" 250}}
-
-                                                        ]}]}})
+                                                                           "basic.to_if_held_down_threshold_milliseconds" 250}}]}]}})
 
 
 
