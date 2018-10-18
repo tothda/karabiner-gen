@@ -76,6 +76,38 @@
 (def pop (layer-factory [[:if "snap" 0] [:if "pop" 1]]))
 (def standard (layer-factory [[:if "snap" 0] [:if "pop" 0]]))
 
+(defn lang
+  "Here I take advantage of fact that with the US layout it is possible to insert
+  accents with sticky modifiers.
+
+  Option-U + o => ö"
+  [from key1 key2]
+  {:type            :basic
+   :conditions      [{:type "variable_if" :name "lang" :value 1}]
+   :from            {:key_code from}
+   :to              [{:key_code key1 :modifiers ["option"]}
+                     {:key_code key2}]
+   :to_after_key_up [{:set_variable {:name "lang" :value 0}}]})
+
+(defn lang-shift
+  "Here I take advantage of fact that with the US layout it is possible to insert
+  accents with sticky modifiers.
+
+  Option-U + o => ö"
+  [from key1 key2]
+  {:type            :basic
+   :conditions      [{:type "variable_if" :name "lang" :value 1}]
+   :from            {:key_code  from
+                     :modifiers {:mandatory ["shift"]}}
+   :to              [{:key_code key1 :modifiers ["option"]}
+                     {:key_code key2 :modifiers ["shift"]}]
+   :to_after_key_up [{:set_variable {:name "lang" :value 0}}]})
+
+(defn cond-app-if
+  [app]
+  {:type :frontmost_application_if
+   :bundle_identifiers [app]})
+
 (def crackle-profile
   {:name                  "C"
    :selected              true
@@ -84,6 +116,57 @@
    :complex_modifications {:parameters {}
                            :rules      [{:description  "bla bla"
                                          :manipulators [
+                                                        {:type :basic
+                                                         :from {:simultaneous [{:key_code "d"}
+                                                                               {:key_code "f"}]
+                                                                :modifiers    {:optional ["any"]}}
+                                                         :to   [{:set_variable {:name "lang" :value 1}}]}
+
+                                                        ; á
+                                                        (lang "quote" "e" "a")
+                                                        (lang-shift "quote" "e" "a")
+
+                                                        ; ä
+                                                        (lang "a" "u" "a")
+                                                        (lang-shift "a" "u" "a")
+
+                                                        ; é
+                                                        (lang "semicolon" "e" "e")
+                                                        (lang-shift "semicolon" "e" "e")
+
+                                                        ; é
+                                                        (lang "i" "e" "i")
+                                                        (lang-shift "i" "e" "i")
+
+                                                        ; óÓ
+                                                        (lang "equal_sign" "e" "o")
+                                                        (lang-shift "equal_sign" "e" "o")
+
+                                                        ; öÖ
+                                                        (lang "o" "u" "o")
+                                                        (lang-shift "o" "u" "o")
+                                                        (lang "0" "u" "o")
+                                                        (lang-shift "0" "u" "o")
+
+                                                        ; őŐ
+                                                        (lang "open_bracket" "y" "o")
+                                                        (lang-shift "open_bracket" "y" "o")
+
+                                                        ; úÚ
+                                                        (lang "close_bracket" "e" "u")
+                                                        (lang-shift "close_bracket" "e" "u")
+
+                                                        ; üÜ
+                                                        (lang "hyphen" "u" "u")
+                                                        (lang-shift "hyphen" "u" "u")
+                                                        (lang "u" "u" "u")
+                                                        (lang-shift "u" "u" "u")
+
+                                                        ; űŰ
+                                                        (lang "backslash" "y" "u")
+                                                        (lang-shift "backslash" "y" "u")
+
+
                                                         ; snap on
                                                         {:type            "basic"
                                                          :conditions      [{:type "variable_if" :name "snap" :value 0}
@@ -134,6 +217,7 @@
                                                         (standard "tab" "left_control")
                                                         (standard "semicolon" "return_or_enter")
                                                         (standard "comma" "delete_or_backspace")
+                                                        (standard "slash" "escape")
 
                                                         ; this control can be used in compound shortcuts like
                                                         ; Command-Control-Shift-4 (make screenshot into clipboard)
@@ -232,13 +316,44 @@
                                                         (pop "a" "slash" ["shift"])
                                                         (pop "s" "semicolon")
 
+                                                        ; Hungarian ans german characters
+                                                        ;(standard "1" "1" ["command" "option" "control" "shift"])
+
+
+
+
+
+                                                        #_{:type            "basic"
+                                                           :conditions      [{:type "variable_if" :name "snap" :value 0}
+                                                                             {:type "variable_if" :name "pop" :value 0}]
+                                                           :from            {:key_code  "caps_lock"
+                                                                             :modifiers {:optional ["any"]}}
+                                                           :to              [{:set_variable {:name "snap" :value 1}}]
+                                                           :to_after_key_up [{:set_variable {:name "snap" :value 0}}]}
+
+                                                        #_{:type            "basic"
+                                                           :conditions      [{:type "variable_if" :name "snap" :value 1}
+                                                                             {:type "variable_if" :name "snap-f" :value 0}
+                                                                             {:type "variable_if" :name "pop" :value 0}]
+                                                           :from            {:key_code  "d"
+                                                                             :modifiers {:optional ["any"]}}
+                                                           :to              [{:set_variable {:name "snap-d" :value 1}}]
+                                                           :to_if_alone     [{:key_code "hyphen"}]
+                                                           :to_after_key_up [{:set_variable {:name "snap-d" :value 0}}]}
+
                                                         ;
                                                         {:type            :basic
                                                          :from            {:key_code "1"}
                                                          :to_if_alone     [{:key_code "1"}]
                                                          :to_if_held_down [{:shell_command "'/Library/Application Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli' --select-profile 'N'"}]
                                                          :parameters      {"basic.to_if_alone_timeout_milliseconds"       250,
-                                                                           "basic.to_if_held_down_threshold_milliseconds" 250}}]}]}})
+                                                                           "basic.to_if_held_down_threshold_milliseconds" 250}}
+
+                                                        ;; if app is Anki
+                                                        ;; left command -> 1 (don't know)
+                                                        ;; space
+
+                                                        ]}]}})
 
 
 
