@@ -77,10 +77,29 @@
 (def standard (layer-factory [[:if "snap" 0] [:if "pop" 0]]))
 
 (defn lang
-  "Here I take advantage of fact that with the US layout it is possible to insert
-  accents with sticky modifiers.
+  "Here I take advantage of fact with sticky modifiers it is possible to insert accents.
 
-  Option-U + o => ö"
+  Extended ABC keyboard
+  ---------------------
+  a          -> a
+  Option-e a -> á
+  Option-u a -> ä
+
+  e          -> e
+  Option-e e -> é
+
+  i          -> i
+  Option-e i -> í
+
+  o          -> o
+  Option-e o -> ó
+  Option-u o -> ö
+  Option-j o -> ő
+
+  u          -> u
+  Option-e u -> ú
+  Option-u u -> ü
+  Option-j u -> ű"
   [from]
   [
    {:type            :basic
@@ -144,30 +163,6 @@
    :complex_modifications {:parameters {}
                            :rules      [{:description  "bla bla"
                                          :manipulators (flatten [
-
-                                                                 ; Extended ABC keyboard
-                                                                 ; ---------------------
-                                                                 ; a          -> a
-                                                                 ; Option-e a -> á
-                                                                 ; Option-u a -> ä
-                                                                 ;
-                                                                 ; e          -> e
-                                                                 ; Option-e e -> é
-                                                                 ;
-                                                                 ; i          -> i
-                                                                 ; Option-e i -> í
-                                                                 ;
-                                                                 ; o          -> o
-                                                                 ; Option-e o -> ó
-                                                                 ; Option-u o -> ö
-                                                                 ; Option-j o -> ő
-                                                                 ;
-                                                                 ; u          -> u
-                                                                 ; Option-e u -> ú
-                                                                 ; Option-u u -> ü
-                                                                 ; Option-j u -> ű
-
-
                                                                  ; df       -> lang1  (Option-e) ó
                                                                  ; lang1 d  -> lang3  (Option-u) ö
                                                                  ; lang1 f  -> lang2  (Option-j) ő
@@ -370,12 +365,4 @@
            (update :profiles conj capsvim-profile)
            (update :profiles conj crackle-profile))
        {:pretty true}))
-
-; map1:
-; - character I'd like to output -> the way I can get that glyph from my keyboard
-; - examples:
-;   - "a" -> "a"
-;   - "A" -> ["a" "shift"]
-;   - "<" -> ["comma" "shift"]
-;   - "{" -> ["open_bracket" "shift"]
 
