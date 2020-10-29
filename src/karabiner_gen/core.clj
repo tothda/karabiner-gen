@@ -326,6 +326,7 @@
                                                                  (snap-f "m" "x" "command") ; cut
                                                                  (snap-f "u" "z" "command") ; undo
                                                                  (snap-f "y" "z" ["shift" "command"]) ; redo
+                                                                 (snap-f "o" "o" ["option" "control" "shift"]) ; redo
 
                                                                  ; pop
                                                                  (pop "d" "open_bracket" ["command" "shift"]) ; select previous tab
