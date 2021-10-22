@@ -407,18 +407,18 @@
          ;; snap e   : duplicate line
          ;; snap r   : comment line
 
-         (app-snap-f :intellij "o" "w" ["command" "option" "control" "shift"])  ; select line (custom shortcut Shift - Ctrl - Alt - Command - W)
-         (app-snap-f :intellij "p" "g" ["command" "option" "control" "shift"])  ; (custom shortcut Shift - Ctrl - Alt - Command - G)
-         (app-snap-f :intellij "y" "8" ["command" "shift"])                     ; column selection on / off
+         (app-snap-f :intellij "o" "w" ["command" "option" "control" "shift"])  ; custom intellij shortcut
+         (app-snap-f :intellij "p" "g" ["command" "option" "control" "shift"])  ; custom intellij shortcut
+         (app-snap-f :intellij "y" "8" ["command" "shift"])
          (app-snap-f :intellij "comma" "up_arrow" "option")
          (app-snap :intellij "q" "delete_or_backspace" "command")
          (app-snap :intellij "w" "j" ["control" "shift"])
          (app-snap :intellij "e" "d" "command")
          (app-snap :intellij "r" "slash" "command")
 
-         (app-snap-f :sublime "o" "l" ["command"])                              ; select line (custom shortcut Shift - Ctrl - Alt - Command - W)
-         (app-snap-f :sublime "p" "d" ["command"])                              ; add next occurence to selection
-         (app-snap-f :sublime "y" "down_arrow" ["control" "shift"])             ; delete line
+         (app-snap-f :sublime "o" "l" ["command"])
+         (app-snap-f :sublime "p" "d" ["command"])
+         (app-snap-f :sublime "y" "down_arrow" ["control" "shift"])
          (app-snap :sublime "q" "k" ["control" "shift"])
          (app-snap :sublime "w" "j" ["command" "shift"])
          (app-snap :sublime "e" "d" ["command" "shift"])
