@@ -315,8 +315,8 @@
          ;; snap r : (app specific) comment line
          (snap "t" "slash")                                                     ; /
          (snap "y" "backslash")                                                 ; \
-         ;; snap u : FREE
-         ;; snap i : FREE
+         (snap "u" "left_arrow" "option")
+         (snap "i" "right_arrow" "option")
          ;; snap o : FREE
          ;; snap p : FREE
          (snap "open_bracket" "backslash" "shift")                              ; |
