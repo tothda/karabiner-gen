@@ -2,8 +2,10 @@
   (:require [cheshire.core :refer [generate-string]])
   (:refer-clojure :exclude [pop]))
 
+
 (def bundle {:intellij "com.jetbrains.intellij"
              :sublime "com.sublimetext.4"})
+
 
 (def config
   {:global {"check_for_updates_on_startup" true
@@ -184,14 +186,14 @@
            :modifiers {:mandatory [:shift]}}
     :to [{:key_code "u" :modifiers [:option]}
          {:key_code from :modifiers [:shift]}]
-    :to_after_key_up [{:set_variable {:name :lang :value 0}}]}
-   ])
+    :to_after_key_up [{:set_variable {:name :lang :value 0}}]}])
 
 
 (defn cond-app-if
   [app]
   {:type :frontmost_application_if
    :bundle_identifiers [app]})
+
 
 (def crackle-profile
   {:name "C"
@@ -206,9 +208,12 @@
       :manipulators
       (flatten
         [
-         ; df       -> lang1  (Option-e) ó
-         ; lang1 d  -> lang3  (Option-u) ö
-         ; lang1 f  -> lang2  (Option-j) ő
+
+         ;; Language modes:
+         ;;
+         ;;  df       -> lang1  (Option-e) ó
+         ;;  lang1 d  -> lang3  (Option-u) ö
+         ;;  lang1 f  -> lang2  (Option-j) ő
 
          {:type :basic
           :conditions [{:type :variable_if :name :lang :value 0}]
@@ -237,7 +242,10 @@
          (lang :u)
 
 
-         ; snap on
+         ;; ======================================================
+         ;; Layer activation shortcuts
+
+         ;; SNAP
          {:type :basic
           :conditions [{:type :variable_if :name :snap :value 0}
                        {:type :variable_if :name :pop :value 0}
@@ -254,7 +262,8 @@
                  :modifiers {:optional [:any]}}
           :to [{:set_variable {:name :snap :value 1}}]
           :to_after_key_up [{:set_variable {:name :snap :value 0}}]}
-         ; pop on
+
+         ;; POP
          {:type :basic
           :conditions [{:type :variable_if :name :snap :value 0}
                        {:type :variable_if :name :pop :value 0}
@@ -297,6 +306,7 @@
           :to [{:set_variable {:name :slash :value 1}}]
           :to_after_key_up [{:set_variable {:name :slash :value 0}}]}
 
+
          ;; =====================================================================
          ;; SNAP top row
          (standard :tab :left_control)
@@ -305,6 +315,7 @@
          (standard :period [:any] :left_control [])
          ; to change between windows of a program comfortable on a hungarian keyboard
          (standard :non_us_backslash :command :grave_accent_and_tilde :command)
+
 
          ;; =====================================================================
          ;; SNAP top row
@@ -322,6 +333,7 @@
          (snap :open_bracket :backslash :shift)                                 ; |
          (snap :close_bracket :grave_accent_and_tilde)                          ; `
 
+
          ;; =====================================================================
          ;; SNAP middle row
          (snap :quote :right_arrow [:command])
@@ -334,6 +346,7 @@
          (snap :s :equal_sign :shift)
          (snap :a :equal_sign)
          (snap :caps_lock :semicolon :shift)
+
 
          ;; =====================================================================
          ;; SNAP bottom row
