@@ -103,6 +103,16 @@
       (update result :conditions conj {:type "frontmost_application_if" :bundle_identifiers [bundle]}))))
 
 
+(defn add-description
+  [next-fn]
+  (fn [& args]
+    (let [last-param (last args)]
+      (if (string? last-param)
+        (let [result (apply next-fn (butlast args))]
+          (assoc result :description last-param))
+        (apply next-fn args)))))
+
+
 (def standard (add-var-if-conditions basic-modification {:snap 0 :snap-d 0 :snap-f 0 :pop 0 :slash 0}))
 (def snap (add-var-if-conditions basic-modification {:snap 1 :snap-d 0 :snap-f 0 :pop 0 :slash 0}))
 (def snap-d (add-var-if-conditions basic-modification {:snap 1 :snap-d 1 :snap-f 0 :pop 0 :slash 0}))
@@ -113,7 +123,14 @@
 
 (def app-snap (-> basic-modification (add-var-if-conditions {:snap 1 :snap-d 0 :snap-f 0 :pop 0 :slash 0}) (add-app-prefix-condition)))
 (def app-snap-f (-> basic-modification (add-var-if-conditions {:snap 1 :snap-d 0 :snap-f 1 :pop 0 :slash 0}) (add-app-prefix-condition)))
-(def app-snap-d (-> basic-modification (add-var-if-conditions {:snap 1 :snap-d 1 :snap-f 0 :pop 0 :slash 0}) (add-app-prefix-condition)))
+(def app-snap-d (-> basic-modification
+                  (add-var-if-conditions {:snap 1 :snap-d 1 :snap-f 0 :pop 0 :slash 0})
+                  (add-description)
+                  (add-app-prefix-condition)))
+(def app-standard (-> basic-modification
+                    (add-var-if-conditions {:snap 0 :snap-d 0 :snap-f 0 :pop 0 :slash 0})
+                    (add-description)
+                    (add-app-prefix-condition)))
 
 
 (defn lang
@@ -375,7 +392,7 @@
 
 
          (pop :d :open_bracket [:command :shift])                               ; select previous tab
-         (pop :f :close_bracket [:command :shift])                              ; select next tab
+         (pop :f :close_bracket [:command :shift])                              ; select f tab
          (pop :j :open_bracket [:command])                                      ; select next tab
          (pop :k :close_bracket [:command])                                     ; select next tab
          (pop :q :1 [:shift])                                                   ; !
@@ -420,6 +437,7 @@
          ;; snap w   : join lines
          ;; snap e   : duplicate line
          ;; snap r   : comment line
+         ;; F3       : quick find
 
          (app-snap-f :intellij :o :w [:command :option :control :shift])        ; custom intellij shortcut: Extend Line Selection
          (app-snap-f :intellij :p :g [:command :option :control :shift])        ; custom intellij shortcut: Add Selection for Next Occurance
@@ -429,6 +447,7 @@
          (app-snap :intellij :w :j [:control :shift])
          (app-snap :intellij :e :d :command)
          (app-snap :intellij :r :slash :command)
+         (app-standard :intellij :f3 :g [:option])                              ; requires intellij plugin: https://plugins.jetbrains.com/plugin/10635-quick-find/versions
 
          (app-snap-f :sublime :o :l [:command])
          (app-snap-f :sublime :p :d [:command])
@@ -438,6 +457,7 @@
          (app-snap :sublime :w :j [:command :shift])
          (app-snap :sublime :e :d [:command :shift])
          (app-snap :sublime :r :slash [:command])
+         (app-standard :sublime :f3 :g [:command :option])
 
          ;; ===========================================================================
          ;; App speficic special commands (commands that make sense in this particular application)
@@ -454,11 +474,17 @@
          (app-snap-d :intellij :b :b [:command :option :control :shift])        ; restart system
          (app-snap-d :intellij :u :u [:command :option :control :shift])        ; rerun last test action
 
+         (app-snap-d :sublime :h :h [:control :shift :option] "sublime: eval file")
+         (app-snap-d :sublime :k :k [:control :shift :option] "sublime: clear output")
+         (app-snap-d :sublime :j :j [:control :shift :option] "sublime: eval topmost form")
+
          ])}]}})
 
-(spit "/Users/david/.config/karabiner/karabiner.json"
-  (generate-string
-    (-> config
-      (update :profiles conj capsvim-profile)
-      (update :profiles conj crackle-profile))
-    {:pretty true}))
+
+(comment
+  (spit "/Users/david/.config/karabiner/karabiner.json"
+    (generate-string
+      (-> config
+        (update :profiles conj capsvim-profile)
+        (update :profiles conj crackle-profile))
+      {:pretty true})))
