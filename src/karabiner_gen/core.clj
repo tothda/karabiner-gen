@@ -4,7 +4,8 @@
 
 
 (def bundle {:intellij "com.jetbrains.intellij"
-             :sublime "com.sublimetext.4"})
+             :sublime  "com.sublimetext.4"
+             :vscode   "com.microsoft.VSCode"})
 
 
 (def config
@@ -121,15 +122,21 @@
 (def slash (add-var-if-conditions basic-modification {:snap 0 :snap-d 0 :snap-f 0 :pop 0 :slash 1}))
 
 
-(def app-snap (-> basic-modification (add-var-if-conditions {:snap 1 :snap-d 0 :snap-f 0 :pop 0 :slash 0}) (add-app-prefix-condition)))
-(def app-snap-f (-> basic-modification (add-var-if-conditions {:snap 1 :snap-d 0 :snap-f 1 :pop 0 :slash 0}) (add-app-prefix-condition)))
-(def app-snap-d (-> basic-modification
-                  (add-var-if-conditions {:snap 1 :snap-d 1 :snap-f 0 :pop 0 :slash 0})
-                  (add-description)
-                  (add-app-prefix-condition)))
-(def app-standard (-> basic-modification
-                    (add-var-if-conditions {:snap 0 :snap-d 0 :snap-f 0 :pop 0 :slash 0})
+(def app-snap     (-> basic-modification
                     (add-description)
+                    (add-var-if-conditions {:snap 1 :snap-d 0 :snap-f 0 :pop 0 :slash 0})
+                    (add-app-prefix-condition)))
+(def app-snap-f   (-> basic-modification
+                    (add-description)
+                    (add-var-if-conditions {:snap 1 :snap-d 0 :snap-f 1 :pop 0 :slash 0})
+                    (add-app-prefix-condition)))
+(def app-snap-d   (-> basic-modification
+                    (add-description)
+                    (add-var-if-conditions {:snap 1 :snap-d 1 :snap-f 0 :pop 0 :slash 0})
+                    (add-app-prefix-condition)))
+(def app-standard (-> basic-modification
+                    (add-description)
+                    (add-var-if-conditions {:snap 0 :snap-d 0 :snap-f 0 :pop 0 :slash 0})
                     (add-app-prefix-condition)))
 
 
@@ -439,6 +446,7 @@
          ;; snap r   : comment line
          ;; F3       : quick find
 
+         ;; Intellij
          (app-snap-f :intellij :o :w [:command :option :control :shift])        ; custom intellij shortcut: Extend Line Selection
          (app-snap-f :intellij :p :g [:command :option :control :shift])        ; custom intellij shortcut: Add Selection for Next Occurance
          (app-snap-f :intellij :y :8 [:command :shift])
@@ -449,6 +457,7 @@
          (app-snap :intellij :r :slash :command)
          (app-standard :intellij :f3 :g [:option])                              ; requires intellij plugin: https://plugins.jetbrains.com/plugin/10635-quick-find/versions
 
+         ;; Sublime
          (app-snap-f :sublime :o :l [:command])
          (app-snap-f :sublime :p :d [:command])
          (app-snap-f :sublime :y :down_arrow [:control :shift])
@@ -458,6 +467,18 @@
          (app-snap :sublime :e :d [:command :shift])
          (app-snap :sublime :r :slash [:command])
          (app-standard :sublime :f3 :g [:command :option])
+
+         ;; VS Code
+         (app-snap-f :vscode :o     :l           [:command]                 "select line")
+         (app-snap-f :vscode :p     :d           [:command]                 "add next occurance to selection")
+         (app-snap-f :vscode :y     :down_arrow  [:command :option]         "column selectio down")
+         (app-snap-f :vscode :comma :right_arrow [:control :shift :command] "expand selection")
+         (app-snap   :vscode :q     :k           [:command :shift]          "delete line")
+         (app-snap   :vscode :w     :j           [:control]                 "join lines")
+         (app-snap   :vscode :e     :down_arrow  [:shift :option]           "dupliacte line")
+         (app-snap   :vscode :r     :slash       [:command]                 "comment out line")
+         ;; quick find to F3: othing to do F3 is already bound to quick find in VS Code
+
 
          ;; ===========================================================================
          ;; App speficic special commands (commands that make sense in this particular application)
